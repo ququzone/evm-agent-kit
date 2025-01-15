@@ -2,6 +2,7 @@ import { Account, WalletClient, Hex, createWalletClient, http, Address, publicAc
 import { privateKeyToAccount } from "viem/accounts";
 import { z } from "zod";
 import { Action, ActionSchemaAny } from "../action";
+import { Assets } from "../utils/assets";
 
 export class EOAAgentKit {
     private account?: Account;
@@ -13,7 +14,15 @@ export class EOAAgentKit {
         agent.wallet = createWalletClient({
             account: agent.account,
             transport: http(rpc),
-        }).extend(publicActions);
+        });
+
+        const chainId = await agent.wallet.getChainId();
+        agent.wallet = agent.wallet.extend(publicActions).extend(client => ({
+            getAssetAddress(assetId: string): string {
+                // @ts-ignore
+                return Assets[chainId.toString()][assetId];
+            },
+        }));
 
         return agent;
     }

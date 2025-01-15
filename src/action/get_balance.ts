@@ -1,11 +1,13 @@
-import { WalletClient } from "viem";
+import { WalletClient, formatEther, formatUnits, parseEther } from "viem";
 import { z } from "zod";
 import { Action } from "./base";
+import { ERC20Abi } from "../utils/abi/erc20";
 
 const GET_BALANCE_PROMPT = `
 This tool will get the balance of the address in the wallet for a given asset.
-Don't ask user address, just use wallet address.
-It takes the asset symbol as input. Always use 'iotx' for the native asset IOTX.
+It takes the asset symbol as input. Always use 'IOTX' for the native asset IOTX.
+Don't ask me wallet address, the tool will use agent wallet address.
+Don't change symbol WIOTX to IOTX.
 `;
 
 export const GetBalanceInput = z
@@ -20,8 +22,39 @@ export async function getBalance(
     args: z.infer<typeof GetBalanceInput>,
 ): Promise<string> {
     try {
-        console.log(`${args.assetSymbol}`);
-        return `The ${args.assetSymbol} for account ${wallet.account?.address} is ${0}`;
+        let balance = "0";
+        const symbol = args.assetSymbol.toUpperCase();
+        const account = wallet.account?.address;
+        if (symbol == "IOTX") {
+            balance = formatEther(
+                // @ts-ignore
+                await wallet.getBalance({
+                    address: account,
+                }),
+            );
+        } else {
+            // FIXME: should mapping symbol to ERC20 contract address
+            // @ts-ignore
+            const address = wallet.getAssetAddress(symbol);
+            if (!address) {
+                return `The ${symbol} doesn't support.`;
+            }
+            // @ts-ignore
+            const decimals = await wallet.readContract({
+                address: address,
+                abi: ERC20Abi,
+                functionName: "decimals",
+            });
+            // @ts-ignore
+            const balanceOf = await wallet.readContract({
+                address: address,
+                abi: ERC20Abi,
+                functionName: "balanceOf",
+                args: [account],
+            });
+            balance = formatUnits(balanceOf, decimals);
+        }
+        return `The ${symbol} for account ${wallet.account?.address} is ${balance}`;
     } catch (error) {
         return `Error getting balance in the wallet: ${error}`;
     }
