@@ -41,6 +41,8 @@ async function initializeAgent() {
           Be concise and helpful with your responses. Refrain from 
           restating your tools' descriptions unless it is explicitly requested.
           Don't use markdown format response.
+          Always use 'IOTX' for the native asset IOTX.
+          Don't change symbol WIOTX to IOTX.
           `,
         });
 

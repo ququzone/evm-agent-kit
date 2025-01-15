@@ -1,13 +1,12 @@
-import { WalletClient, formatEther, formatUnits, parseEther } from "viem";
+import { WalletClient, formatEther, formatUnits } from "viem";
 import { z } from "zod";
 import { Action } from "./base";
 import { ERC20Abi } from "../utils/abi/erc20";
 
 const GET_BALANCE_PROMPT = `
 This tool will get the balance of the address in the wallet for a given asset.
-It takes the asset symbol as input. Always use 'IOTX' for the native asset IOTX.
-Don't ask me wallet address, the tool will use agent wallet address.
-Don't change symbol WIOTX to IOTX.
+It takes the asset symbol as input.
+Don't ask user wallet address, the tool will use agent wallet address.
 `;
 
 export const GetBalanceInput = z
@@ -33,7 +32,6 @@ export async function getBalance(
                 }),
             );
         } else {
-            // FIXME: should mapping symbol to ERC20 contract address
             // @ts-ignore
             const address = wallet.getAssetAddress(symbol);
             if (!address) {
