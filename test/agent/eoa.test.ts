@@ -1,10 +1,10 @@
 import { generatePrivateKey } from "viem/accounts";
-import { EOAAgent } from "../../src/agent/eoa";
+import { EOAAgentKit } from "../../src/agent/eoa";
 
-describe("EOAAgent", () => {
+describe("EOAAgentKit", () => {
     describe("initialization", () => {
         it("basic", async () => {
-            const agent = await EOAAgent.buildWithPrivateKey(
+            const agent = await EOAAgentKit.buildWithPrivateKey(
                 "https://babel-api.mainnet.iotex.io",
                 generatePrivateKey(),
             );

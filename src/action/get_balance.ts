@@ -3,7 +3,8 @@ import { z } from "zod";
 import { Action } from "./base";
 
 const GET_BALANCE_PROMPT = `
-This tool will get the balance of the addresse in the wallet for a given asset. 
+This tool will get the balance of the address in the wallet for a given asset.
+Don't ask user address, just use wallet address.
 It takes the asset symbol as input. Always use 'iotx' for the native asset IOTX.
 `;
 
@@ -19,6 +20,7 @@ export async function getBalance(
     args: z.infer<typeof GetBalanceInput>,
 ): Promise<string> {
     try {
+        console.log(`${args.assetSymbol}`);
         return `The ${args.assetSymbol} for account ${wallet.account?.address} is ${0}`;
     } catch (error) {
         return `Error getting balance in the wallet: ${error}`;

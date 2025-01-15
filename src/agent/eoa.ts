@@ -3,12 +3,12 @@ import { privateKeyToAccount } from "viem/accounts";
 import { z } from "zod";
 import { Action, ActionSchemaAny } from "../action";
 
-export class EOAAgent {
+export class EOAAgentKit {
     private account?: Account;
     private wallet?: WalletClient;
 
-    public static async buildWithPrivateKey(rpc: string, privateKey: string): Promise<EOAAgent> {
-        const agent = new EOAAgent();
+    public static async buildWithPrivateKey(rpc: string, privateKey: string): Promise<EOAAgentKit> {
+        const agent = new EOAAgentKit();
         agent.account = privateKeyToAccount(privateKey as Hex);
         agent.wallet = createWalletClient({
             account: agent.account,
