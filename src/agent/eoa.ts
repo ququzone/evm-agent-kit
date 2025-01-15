@@ -1,22 +1,11 @@
-import {
-    Account,
-    WalletClient,
-    Hex,
-    createWalletClient,
-    http,
-    Address,
-    publicActions,
-} from 'viem';
-import { privateKeyToAccount } from 'viem/accounts';
+import { Account, WalletClient, Hex, createWalletClient, http, Address, publicActions } from "viem";
+import { privateKeyToAccount } from "viem/accounts";
 
 export class EOAAgent {
     private wallet?: Account;
     private client?: WalletClient;
 
-    public static async buildWithPrivateKey(
-        rpc: string,
-        privateKey: string,
-    ): Promise<EOAAgent> {
+    public static async buildWithPrivateKey(rpc: string, privateKey: string): Promise<EOAAgent> {
         const agent = new EOAAgent();
         agent.wallet = privateKeyToAccount(privateKey as Hex);
         agent.client = createWalletClient({
@@ -25,6 +14,10 @@ export class EOAAgent {
         }).extend(publicActions);
 
         return agent;
+    }
+
+    async address(): Promise<string> {
+        return this.wallet!.address;
     }
 
     async getBalance(address: string): Promise<bigint> {

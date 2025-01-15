@@ -12,7 +12,7 @@
 		"build": "tsc",
 		"lint": "eslint .",
 		"lint:fix": "eslint . --fix",
-		"format": "prettier --write \"src/**/*.ts\"",
+		"format": "prettier --write \"{src,test}/**/*.ts\"",
 		"test": "jest"
 	},
 	"license": "MIT",

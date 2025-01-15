@@ -1,5 +1,5 @@
 import { generatePrivateKey } from "viem/accounts";
-import { EOAAgent } from "../../src/agent/eoa"
+import { EOAAgent } from "../../src/agent/eoa";
 
 describe("EOAAgent", () => {
     describe("initialization", () => {
@@ -11,6 +11,8 @@ describe("EOAAgent", () => {
 
             const balance = await agent.getBalance("0x0000000000000000000000000000000000000000");
             expect(balance).toBeGreaterThan(0);
-        })
-    })
-})
+
+            console.log(`Agent address is ${await agent.address()}`);
+        });
+    });
+});
