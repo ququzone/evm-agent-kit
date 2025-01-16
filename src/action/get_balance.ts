@@ -5,13 +5,15 @@ import { ERC20Abi } from "../utils/abi/erc20";
 
 const GET_BALANCE_PROMPT = `
 This tool will get the balance of the address in the wallet for a given asset.
-It takes the asset symbol as input.
-Don't ask user wallet address, the tool will use agent wallet address.
+It takes the asset symbol or token address as input.
+If user don't provide the account address, then use 'WALLET' as user account input.
+Don't ask user wallet address.
 `;
 
 export const GetBalanceInput = z
     .object({
-        assetSymbol: z.string().describe("The asset symbol to get the balance for"),
+        assetSymbol: z.string().describe("The asset symbol or address to get the balance for"),
+        userAccount: z.string().describe("The user account address to get the the balance"),
     })
     .strip()
     .describe("Instructions for getting wallet balance");
@@ -22,9 +24,13 @@ export async function getBalance(
 ): Promise<string> {
     try {
         let balance = "0";
-        const symbol = args.assetSymbol.toUpperCase();
-        const account = wallet.account?.address;
-        if (symbol == "IOTX") {
+        const symbol = args.assetSymbol;
+        let account = args.userAccount;
+        if (account === "WALLET") {
+            account = wallet.account!.address;
+        }
+
+        if (symbol.toUpperCase() == "IOTX") {
             balance = formatEther(
                 // @ts-ignore
                 await wallet.getBalance({
@@ -33,9 +39,13 @@ export async function getBalance(
             );
         } else {
             // @ts-ignore
-            const address = wallet.getAssetAddress(symbol);
+            let address = wallet.getAssetAddress(symbol.toUpperCase());
             if (!address) {
-                return `The ${symbol} doesn't support.`;
+                if (args.assetSymbol.startsWith("0x")) {
+                    address = args.assetSymbol;
+                } else {
+                    return `The ${symbol} doesn't support.`;
+                }
             }
             // @ts-ignore
             const decimals = await wallet.readContract({
@@ -52,7 +62,7 @@ export async function getBalance(
             });
             balance = formatUnits(balanceOf, decimals);
         }
-        return `The ${symbol} for account ${wallet.account?.address} is ${balance}`;
+        return `The ${symbol} for account ${account} is ${balance}`;
     } catch (error) {
         return `Error getting balance in the wallet: ${error}`;
     }
