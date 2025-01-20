@@ -19,7 +19,7 @@ Important notes:
 export const TransferInput = z
     .object({
         amount: z.number().describe("The amount of the asset to transfer"),
-        assetSymbol: z.string().describe("The asset symbol to transfer"),
+        assetSymbol: z.string().describe("The asset symbol or address to transfer"),
         destination: z.string().describe("The destination to transfer the funds"),
     })
     .strip()
@@ -42,9 +42,13 @@ export async function transfer(
             });
         } else {
             // @ts-ignore
-            const address = wallet.getAssetAddress(symbol);
+            let address = wallet.getAssetAddress(symbol);
             if (!address) {
-                return `The ${symbol} doesn't support currently.`;
+                if (args.assetSymbol.startsWith("0x")) {
+                    address = args.assetSymbol;
+                } else {
+                    return `The ${symbol} doesn't support.`;
+                }
             }
             // @ts-ignore
             const decimals = await wallet.readContract({
