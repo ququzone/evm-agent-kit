@@ -1,1 +1,1 @@
-export * from "./eoa";
+export * from "./agent";

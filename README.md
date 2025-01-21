@@ -1,4 +1,4 @@
-IoTeX EVM agent kit
+EVM agent kit
 ===================
 
 ## Getting start

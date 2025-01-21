@@ -1,14 +1,14 @@
-import { WalletClient } from "viem";
 import { z } from "zod";
 import { Action } from "./base";
+import { Context } from "../agent/context";
 
 export const AddressInput = z.object({});
 
-export async function address(
-    wallet: WalletClient,
-    args: z.infer<typeof AddressInput>,
-): Promise<string> {
-    return `The agent wallet address is ${wallet.account?.address}`;
+export async function address(context: Context, _: z.infer<typeof AddressInput>): Promise<string> {
+    if (context.account) {
+        return `The agent wallet address is ${context.account.address}`;
+    }
+    throw new Error("No account in context");
 }
 
 export class AddressAction implements Action<typeof AddressInput> {

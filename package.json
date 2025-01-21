@@ -1,7 +1,7 @@
 {
-	"name": "iotex-evm-agent-kit",
+	"name": "evm-agent-kit",
 	"version": "0.0.1",
-	"description": "IoTeX evm agent kit",
+	"description": "EVM AI agent kit",
 	"keywords": [],
 	"engines": {
 		"node": ">=20.0.0",

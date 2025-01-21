@@ -1,5 +1,5 @@
-import { WalletClient } from "viem";
 import { z } from "zod";
+import { Context } from "../agent/context";
 
 export type ActionSchemaAny = z.ZodObject<any, any, any, any>;
 
@@ -11,6 +11,6 @@ export interface Action<ActionSchema extends ActionSchemaAny> {
     argsSchema: ActionSchema;
 
     func:
-        | ((wallet: WalletClient, args: z.infer<ActionSchema>) => Promise<string>)
+        | ((context: Context, args: z.infer<ActionSchema>) => Promise<string>)
         | ((args: z.infer<ActionSchema>) => Promise<string>);
 }
