@@ -1,6 +1,6 @@
 import { StructuredTool } from "@langchain/core/tools";
 import { z } from "zod";
-import { Action, ActionSchemaAny, EOAAgentKit } from "../../../src";
+import { Action, ActionSchemaAny, AgentKit } from "../../../src";
 
 export class WalletTool<ActionSchema extends ActionSchemaAny> extends StructuredTool {
     public schema: ActionSchema;
@@ -9,11 +9,11 @@ export class WalletTool<ActionSchema extends ActionSchemaAny> extends Structured
 
     public description: string;
 
-    private agentKit: EOAAgentKit;
+    private agentKit: AgentKit;
 
     private action: Action<ActionSchema>;
 
-    constructor(action: Action<ActionSchema>, agentKit: EOAAgentKit) {
+    constructor(action: Action<ActionSchema>, agentKit: AgentKit) {
         super();
         this.action = action;
         this.agentKit = agentKit;

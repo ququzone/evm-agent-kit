@@ -73,7 +73,14 @@ export async function transfer(
                 args: [args.destination, amount],
             });
         }
-        return `Transferred ${args.amount} of ${symbol} to ${args.destination}.\nTransaction hash for the transfer: ${hash}\nTransaction link for the transfer: https://iotexscan.io/tx/${hash}`;
+        let result = `Transferred ${args.amount} of ${symbol} to ${args.destination}.\nTransaction hash for the transfer: ${hash}`;
+        if (
+            network.client.chain?.blockExplorers &&
+            network.client.chain?.blockExplorers["default"]
+        ) {
+            result += `\nTransaction link for the transfer: ${network.client.chain?.blockExplorers["default"].url}/tx/${hash}`;
+        }
+        return result;
     } catch (error) {
         return `Error transferring the asset: ${error}`;
     }

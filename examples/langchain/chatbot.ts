@@ -3,8 +3,10 @@ import { MemorySaver } from "@langchain/langgraph";
 import { createReactAgent } from "@langchain/langgraph/prebuilt";
 import { ChatOpenAI } from "@langchain/openai";
 import * as readline from "readline";
-import { EOAAgentKit } from "../../src";
+import { AgentKit } from "../../src";
 import { WalletToolkit } from "./toolkit";
+import { defineChain } from "viem";
+import { Context, newEOANetwork } from "../../src/agent/context";
 
 async function initializeAgent() {
     try {
@@ -13,10 +15,27 @@ async function initializeAgent() {
         });
 
         // Initialize AgentKit
-        const agentKit = await EOAAgentKit.buildWithPrivateKey(
-            process.env.ETH_RPC_URL!,
-            `0x${process.env.PRIVATE_KEY!}`,
-        );
+        const iotxChain = defineChain({
+            id: 4689,
+            name: "IoTeX Mainnet",
+            nativeCurrency: { name: "IoTeX", symbol: "IOTX", decimals: 18 },
+            rpcUrls: {
+                default: {
+                    http: ["https://babel-api.mainnet.iotex.io"],
+                },
+            },
+            blockExplorers: {
+                default: {
+                    name: "default",
+                    url: "https://iotexscan.io",
+                },
+            },
+            testnet: false,
+        });
+        const context = new Context(`0x${process.env.PRIVATE_KEY!}`);
+        const iotxNetwork = await newEOANetwork(iotxChain, context.account!);
+        context.addNetwork("IoTeX", iotxNetwork);
+        const agentKit = await AgentKit.buildWithContext(context);
 
         // Initialize Agent Toolkit and get tools
         const toolkit = new WalletToolkit(agentKit);
@@ -41,8 +60,8 @@ async function initializeAgent() {
           Be concise and helpful with your responses. Refrain from 
           restating your tools' descriptions unless it is explicitly requested.
           Don't use markdown format response.
-          Always use 'IOTX' for the native asset IOTX.
-          Don't change symbol WIOTX to IOTX.
+          Always use upper case symbol for the native asset.
+          The default network should be IoTeX. If user don't provide network name, please 'IoTeX' as network name.
           `,
         });
 
