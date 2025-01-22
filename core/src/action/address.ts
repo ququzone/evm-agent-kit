@@ -4,7 +4,7 @@ import { Context } from "../agent/context";
 
 export const AddressInput = z.object({});
 
-export async function address(context: Context, _: z.infer<typeof AddressInput>): Promise<string> {
+export async function address(context: Context): Promise<string> {
     if (context.account) {
         return `The agent wallet address is ${context.account.address}`;
     }

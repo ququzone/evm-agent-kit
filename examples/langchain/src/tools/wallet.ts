@@ -1,6 +1,6 @@
 import { StructuredTool } from "@langchain/core/tools";
 import { z } from "zod";
-import { Action, ActionSchemaAny, AgentKit } from "../../../src";
+import { Action, ActionSchemaAny, AgentKit } from "evm-agent-kit";
 
 export class WalletTool<ActionSchema extends ActionSchemaAny> extends StructuredTool {
     public schema: ActionSchema;

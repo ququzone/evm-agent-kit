@@ -3,10 +3,10 @@ import { MemorySaver } from "@langchain/langgraph";
 import { createReactAgent } from "@langchain/langgraph/prebuilt";
 import { ChatOpenAI } from "@langchain/openai";
 import * as readline from "readline";
-import { AgentKit } from "../../src";
-import { WalletToolkit } from "./toolkit";
 import { defineChain } from "viem";
-import { Context, newEOANetwork } from "../../src/agent/context";
+import { AgentKit, Context, newEOANetwork } from "evm-agent-kit";
+
+import { WalletToolkit } from "./toolkit";
 
 async function initializeAgent() {
     try {

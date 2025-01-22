@@ -1,7 +1,7 @@
 import { formatEther, formatUnits } from "viem";
 import { z } from "zod";
 import { Action } from "./base";
-import { ERC20Abi } from "../utils/abi/erc20";
+import { ERC20Abi } from "../utils/abi/ERC20";
 import { Context } from "../agent/context";
 
 const GET_BALANCE_PROMPT = `
@@ -42,12 +42,12 @@ export async function getBalance(
         if (symbol.toUpperCase() === network.client.chain?.nativeCurrency.symbol) {
             balance = formatEther(
                 await network.client.getBalance({
-                    // @ts-ignore
+                    // @ts-expect-error ignore address check
                     address: account,
                 }),
             );
         } else {
-            // @ts-ignore custome method for network
+            // @ts-expect-error custome method for network
             let address = network.client.getAssetAddress(symbol.toUpperCase());
             if (!address) {
                 if (args.assetSymbol.startsWith("0x")) {
@@ -65,7 +65,7 @@ export async function getBalance(
                 address: address,
                 abi: ERC20Abi,
                 functionName: "balanceOf",
-                // @ts-ignore
+                // @ts-expect-error ignore address check
                 args: [account],
             });
             balance = formatUnits(balanceOf, decimals);

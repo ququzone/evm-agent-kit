@@ -1,5 +1,5 @@
 import { StructuredToolInterface, BaseToolkit as Toolkit } from "@langchain/core/tools";
-import { ACTIONS, AgentKit } from "../../src";
+import { ACTIONS, AgentKit } from "evm-agent-kit";
 import { WalletTool } from "./tools/wallet";
 
 export class WalletToolkit extends Toolkit {

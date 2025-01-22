@@ -23,9 +23,8 @@ export async function newReadonlyNetwork(chain: Chain): Promise<Network> {
         transport: http(chain.rpcUrls.default.http[0]),
     });
     const chainId = await client.getChainId();
-    const clientExt = client.extend(_ => ({
+    const clientExt = client.extend(() => ({
         getAssetAddress(assetId: string): string {
-            // @ts-ignore
             return Assets[chainId.toString()][assetId];
         },
     }));
@@ -40,9 +39,8 @@ export async function newEOANetwork(chain: Chain, account: Account): Promise<Net
         transport: http(chain.rpcUrls.default.http[0]),
     });
     const chainId = await client.getChainId();
-    const clientExt = client.extend(_ => ({
+    const clientExt = client.extend(() => ({
         getAssetAddress(assetId: string): string {
-            // @ts-ignore
             return Assets[chainId.toString()][assetId];
         },
     }));

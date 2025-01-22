@@ -1,7 +1,7 @@
 import { parseEther, parseUnits } from "viem";
 import { z } from "zod";
 import { Action } from "./base";
-import { ERC20Abi } from "../utils/abi/erc20";
+import { ERC20Abi } from "../utils/abi/ERC20";
 import { Context } from "../agent/context";
 
 const TRANSFER_PROMPT = `
@@ -45,12 +45,12 @@ export async function transfer(
             const amount = parseEther(args.amount.toString());
             hash = await network.walletClient!.sendTransaction({
                 account: context.account,
-                // @ts-ignore
+                // @ts-expect-error ignore address check
                 to: args.destination,
                 value: amount,
             });
         } else {
-            // @ts-ignore custome method for network
+            // @ts-expect-error custome method for network
             let address = network.client.getAssetAddress(symbol);
             if (!address) {
                 if (args.assetSymbol.startsWith("0x")) {
@@ -69,7 +69,7 @@ export async function transfer(
                 address: address,
                 abi: ERC20Abi,
                 functionName: "transfer",
-                // @ts-ignore
+                // @ts-expect-error ignore address check
                 args: [args.destination, amount],
             });
         }

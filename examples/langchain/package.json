@@ -1,0 +1,21 @@
+{
+    "name": "langchain-example",
+    "version": "0.0.1",
+    "description": "evm agent kit langchain example",
+    "scripts": {
+        "build": "tsc",
+        "lint": "eslint src/**/*.ts"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "MIT",
+    "dependencies": {
+        "@langchain/core": "^0.3.30",
+        "@langchain/langgraph": "^0.2.39",
+        "@langchain/openai": "^0.3.17",
+        "evm-agent-kit": "../../core/dist",
+        "readline": "^1.3.0",
+        "viem": "^2.22.11",
+        "zod": "^3.24.1"
+    }
+}

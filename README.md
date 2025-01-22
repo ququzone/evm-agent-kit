@@ -8,7 +8,7 @@ EVM agent kit
 ```
 export OPENAI_API_KEY=YOUR_OPENAI_API_KEY
 pnpm install
-pnpm ts-node examples/langchain/chatbot.ts
+pnpm ts-node examples/langchain/src/chatbot.ts
 
 .....
 prompt: What's your wallet address?
