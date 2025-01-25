@@ -39,11 +39,12 @@ export async function transfer(
         return `The ${args.network} doesn't support.`;
     }
     try {
+        const walletClient = context.getWalletClient(args.network);
         const symbol = args.assetSymbol.toUpperCase();
         let hash = "";
         if (symbol === network.client.chain?.nativeCurrency.symbol) {
             const amount = parseEther(args.amount.toString());
-            hash = await network.walletClient!.sendTransaction({
+            hash = await walletClient.sendTransaction({
                 account: context.account,
                 // @ts-expect-error ignore address check
                 to: args.destination,
@@ -65,7 +66,7 @@ export async function transfer(
                 functionName: "decimals",
             });
             const amount = parseUnits(args.amount.toString(), decimals);
-            hash = await network.walletClient!.writeContract({
+            hash = await walletClient.writeContract({
                 address: address,
                 abi: ERC20Abi,
                 functionName: "transfer",

@@ -4,7 +4,8 @@ import { createReactAgent } from "@langchain/langgraph/prebuilt";
 import { ChatOpenAI } from "@langchain/openai";
 import * as readline from "readline";
 import { defineChain } from "viem";
-import { AgentKit, Context, newEOANetwork } from "evm-agent-kit";
+import { mainnet } from "viem/chains";
+import { AgentKit, Context, newNetwork } from "evm-agent-kit";
 
 import { WalletToolkit } from "./toolkit";
 
@@ -15,6 +16,11 @@ async function initializeAgent() {
         });
 
         // Initialize AgentKit
+        const context = new Context(`0x${process.env.PRIVATE_KEY!}`);
+
+        const mainnetNetwork = await newNetwork(mainnet);
+        context.addNetwork(mainnet.name, mainnetNetwork);
+
         const iotxChain = defineChain({
             id: 4689,
             name: "IoTeX Mainnet",
@@ -32,9 +38,9 @@ async function initializeAgent() {
             },
             testnet: false,
         });
-        const context = new Context(`0x${process.env.PRIVATE_KEY!}`);
-        const iotxNetwork = await newEOANetwork(iotxChain, context.account!);
-        context.addNetwork("IoTeX", iotxNetwork);
+        const iotxNetwork = await newNetwork(iotxChain);
+        context.addNetwork(iotxChain.name, iotxNetwork);
+
         const agentKit = await AgentKit.buildWithContext(context);
 
         // Initialize Agent Toolkit and get tools
@@ -61,7 +67,7 @@ async function initializeAgent() {
           restating your tools' descriptions unless it is explicitly requested.
           Don't use markdown format response.
           Always use upper case symbol for the native asset.
-          The default network should be IoTeX. If user don't provide network name, please 'IoTeX' as network name.
+          The default network should be IoTeX Mainnet. If user don't provide network name, please 'IoTeX Mainnet' as network name.
           `,
         });
 

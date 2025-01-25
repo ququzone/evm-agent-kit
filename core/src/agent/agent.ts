@@ -12,11 +12,6 @@ export class AgentKit {
 
     public static async buildWithContext(context: Context): Promise<AgentKit> {
         return new AgentKit(context);
-        // agent.account = privateKeyToAccount(privateKey as Hex);
-        // agent.wallet = createWalletClient({
-        //     account: agent.account,
-        //     transport: http(rpc),
-        // });
     }
 
     async address(): Promise<string> {
@@ -40,14 +35,6 @@ export class AgentKit {
         action: Action<ActionSchema>,
         args: ActionSchema,
     ): Promise<string> {
-        if (action.func.length > 1) {
-            if (!this.context) {
-                return `Require context to run Action: ${action.name}.`;
-            }
-
-            return await action.func(this.context, args);
-        }
-
-        return await (action.func as (args: z.infer<ActionSchema>) => Promise<string>)(args);
+        return await action.func(this.context, args);
     }
 }

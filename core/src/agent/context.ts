@@ -3,6 +3,7 @@ import {
     Chain,
     Hex,
     PublicClient,
+    Transport,
     WalletClient,
     createPublicClient,
     createWalletClient,
@@ -13,14 +14,14 @@ import { Assets } from "../utils/assets";
 
 export interface Network {
     client: PublicClient;
-    account?: Account;
-    walletClient?: WalletClient;
+    transport: Transport;
 }
 
-export async function newReadonlyNetwork(chain: Chain): Promise<Network> {
+export async function newNetwork(chain: Chain): Promise<Network> {
+    const transport = http(chain.rpcUrls.default.http[0]);
     const client = createPublicClient({
         chain: chain,
-        transport: http(chain.rpcUrls.default.http[0]),
+        transport: transport,
     });
     const chainId = await client.getChainId();
     const clientExt = client.extend(() => ({
@@ -30,27 +31,7 @@ export async function newReadonlyNetwork(chain: Chain): Promise<Network> {
     }));
     return {
         client: clientExt,
-    };
-}
-
-export async function newEOANetwork(chain: Chain, account: Account): Promise<Network> {
-    const client = createPublicClient({
-        chain: chain,
-        transport: http(chain.rpcUrls.default.http[0]),
-    });
-    const chainId = await client.getChainId();
-    const clientExt = client.extend(() => ({
-        getAssetAddress(assetId: string): string {
-            return Assets[chainId.toString()][assetId];
-        },
-    }));
-    return {
-        client: clientExt,
-        account: account,
-        walletClient: createWalletClient({
-            account: account,
-            transport: http(chain.rpcUrls.default.http[0]),
-        }),
+        transport: transport,
     };
 }
 
@@ -70,6 +51,21 @@ export class Context {
     }
 
     networkNames(): string[] {
-        return Object.keys(this.networks);
+        return [...this.networks.keys()];
+    }
+
+    getWalletClient(networkName: string): WalletClient {
+        if (!this.account) {
+            throw new Error("No account in context");
+        }
+        const network = this.networks.get(networkName);
+        if (!network) {
+            throw new Error(`The ${networkName} doesn't support`);
+        }
+
+        return createWalletClient({
+            account: this.account,
+            transport: network.transport,
+        });
     }
 }
