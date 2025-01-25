@@ -79,7 +79,7 @@ async function initializeAgent() {
           restating your tools' descriptions unless it is explicitly requested.
           Don't use markdown format response.
           Always use upper case symbol for the native asset.
-          The default network should be IoTeX Mainnet. If user don't provide network name, please 'IoTeX Mainnet' as network name.
+          The default network should be Ethereum. If user don't provide network name, please 'Ethereum' as network name.
           `,
         });
 
