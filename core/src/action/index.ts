@@ -5,7 +5,12 @@ import { NetworksAction } from "./networks";
 import { TransferAction } from "./transfer";
 
 export function getAllActions(): Action<ActionSchemaAny>[] {
-    return [new NetworksAction(), new AddressAction(), new GetBalanceAction(), new TransferAction()];
+    return [
+        new NetworksAction(),
+        new AddressAction(),
+        new GetBalanceAction(),
+        new TransferAction(),
+    ];
 }
 
 export const ACTIONS = getAllActions();

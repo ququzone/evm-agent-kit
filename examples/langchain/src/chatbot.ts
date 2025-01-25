@@ -10,9 +10,21 @@ import { AgentKit, Context, newNetwork } from "evm-agent-kit";
 import { WalletToolkit } from "./toolkit";
 
 async function initializeAgent() {
+    let baseURL = "https://api.deepseek.com";
+    let mode = "deepseek-chat";
+    if (process.env.LLM_API_URL) {
+        baseURL = process.env.LLM_API_URL;
+    }
+    if (process.env.LLM_MODEL) {
+        mode = process.env.LLM_MODEL;
+    }
     try {
         const llm = new ChatOpenAI({
-            model: "gpt-4o-mini",
+            //model: "gpt-4o-mini",
+            model: mode,
+            configuration: {
+                baseURL: baseURL,
+            },
         });
 
         // Initialize AgentKit

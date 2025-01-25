@@ -5,7 +5,7 @@ import { Context } from "../agent/context";
 export const NetworkInput = z.object({});
 
 export async function networks(context: Context): Promise<string> {
-    return `All networks supported: ${context.networkNames()}`
+    return `All networks supported by agent: ${context.networkNames()}`;
 }
 
 export class NetworksAction implements Action<typeof NetworkInput> {
